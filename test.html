@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stream Hotstar</title>
+
+
+    <script src="dist/xdomain.js"
+            slave="https://s3.amazonaws.com/jpillora-usa/xdomain/proxy.html"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <script>
+
+        var getIDFromURL = function (url) {
+            return url.match(/[0-9]{6,12}/)[0];
+        };
+
+
+
+        var getHLSHostarLink = function (id) {
+            var getCDNURL = 'http://getcdn.hotstar.com/AVS/besc?action=GetCDN&asJson=Y&channel=TABLET&id=' + id + '&type=VOD';
+            var i = document.createElement("img");
+            i.src = getCDNURL;
+
+        };
+
+        var callback = function(xhttp) {
+            console.log(xhttp.responseText);
+        };
+
+        var go = function () {
+            var url = document.getElementById("hotstar_url").value;
+            var id = getIDFromURL(url);
+            console.log(id);
+            getHLSHostarLink(id)
+        };
+    </script>
+
+</head>
+
+
+<body>
+
+    <p>
+        Enter the hostar.com URL. eg.
+        <a href="http://www.hotstar.com/sports/cricket/series/m184505/live-streaming/2001703701">http://www.hotstar.com/sports/cricket/series/m184505/live-streaming/2001703701</a>
+    </p>
+
+    <div class="wrapper">
+        <label for="url_spot">Hotsar URL</label>
+        <input type="text" id="hotstar_url"/>
+        <button onclick="go()">GO</button>
+    </div>
+
+    <video id="video"></video>
+
+    <script>
+        if(Hls.isSupported()) {
+            var video = document.getElementById('video');
+            var hls = new Hls();
+            hls.loadSource('http://hssports2-i.akamaihd.net/hls/live/573324/indvnz2017ed/ENGDELINDNZ3ODI29102017/master.m3u8?hdnea=st=1509293891~exp=1509294491~acl=/*~hmac=d93517446fac0272406e64e9160ba12be0fb4521267f7bad35ac5a1a2c4a7168');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play();
+            });
+        }
+    </script>
+
+    <p>
+        This website uses HLS streaming. If the stream doesnt work, check browser supporting HLS here: <a href="https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Live_streaming_web_audio_and_video#HLS">this link</a>
+    </p>
+
+</body>
+</html>
